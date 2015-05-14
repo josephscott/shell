@@ -17,10 +17,11 @@ fi
 
 symlink_work () {
 	if [ -e "$2" ]; then
-		echo " ---> SKIPPING: $1"
+		echo " !!!> SKIPPING: $2"
+	else
+		echo " ---> Symlink: $2"
+		ln -s "$1" "$2"
 	fi
-
-	ln -s "$1" "$2"
 }
 
 symlink_files () {
