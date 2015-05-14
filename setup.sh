@@ -74,4 +74,8 @@ echo " *** dot-files ***"
 symlink_files "$FROM"/dot-files "$TARGET"
 echo ""
 
+echo " *** bin ***"
+symlink_files "$FROM"/bin "$TARGET"/bin
+echo ""
+
 echo ""
