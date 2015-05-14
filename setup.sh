@@ -70,8 +70,8 @@ echo " *** FROM: $FROM"
 echo " *** TARGET: $TARGET"
 echo ""
 
-exit
-
-symlink_files "$FROM" "$TARGET"
+echo " *** dot-files ***"
+symlink_files "$FROM"/dot-files "$TARGET"
+echo ""
 
 echo ""
