@@ -1,6 +1,12 @@
 #!/bin/bash
 
-FROM="$(dirname "$0")"
+# http://stackoverflow.com/questions/3572030/bash-script-absolute-path-with-osx
+realpath() {
+    [[ $1 = /* ]] && echo "$1" || echo "$PWD/${1#./}"
+}
+
+FROM=$(realpath "$0")
+FROM=$(dirname "$FROM")
 TARGET=${1-$HOME}
 
 OS="unknown"
@@ -30,7 +36,8 @@ symlink_files () {
 	fi
 
 	for file in "$1"/*; do
-		symlink_work "$1"/"$file" "$2"/"$file"
+		just_file=$(basename $file)
+		symlink_work "$file" "$2"/"$just_file"
 	done
 
 	for file in "$1"/.*; do
@@ -42,7 +49,8 @@ symlink_files () {
 			continue
 		fi
 
-		symlink_work "$1"/"$file" "$2"/"$file"
+		just_file=$(basename $file)
+		symlink_work "$file" "$2"/"$just_file"
 	done
 }
 
