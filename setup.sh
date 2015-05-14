@@ -36,11 +36,19 @@ symlink_files () {
 	fi
 
 	for file in "$1"/*; do
+		if [ "$file" = "$1"/"*" ]; then
+			continue
+		fi
+
 		just_file=$(basename $file)
 		symlink_work "$file" "$2"/"$just_file"
 	done
 
 	for file in "$1"/.*; do
+		if [ "$file" = "$1"/"*" ]; then
+			continue
+		fi
+
 		if [ "$file" = "$1"/"." ]; then
 			continue
 		fi
