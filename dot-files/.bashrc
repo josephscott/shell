@@ -3,7 +3,7 @@
 export PS1="\[\e[33m\]\u\[\e[m\]@\[\e[32m\]\H\[\e[m\] \[\e[36m\]\w\[\e[m\]\\$ "
 
 # tired of typing
-alias ll='ls -laF --color'
+alias ll='ls -laF'
 
 # env basics
 export LANG="en_US.UTF-8"
