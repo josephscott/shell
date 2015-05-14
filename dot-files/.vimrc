@@ -13,8 +13,8 @@ set undodir=~/.vim/undo
 " how to treat files
 set encoding=utf-8
 set fileformat=unix
-set tabstop=2
-set shiftwidth=2
+set tabstop=4
+set shiftwidth=4
 set backspace=indent,eol,start
 set noautoindent
 set nosmartindent
