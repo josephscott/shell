@@ -16,7 +16,7 @@ export EDITOR="vim"
 
 # color the world
 export CLICOLOR=1
-export LSCOLORS=GxFxCxDxBxegedabagaced
+export LSCOLORS=GxFxCxDxbxegedabagaced
 
 # history
 shopt -s histappend
@@ -30,6 +30,6 @@ case "$OSTYPE" in
 		;;
 	linux*)
 		alias ll='ls -laF --color'
-		export LS_COLORS='di=1;36;40:ln=1;35;40:so=1;32;40:pi=1;33;40:ex=1;31;40:bd=34;46:cd=34;43:su=0;41:sg=0;46:tw=0;42:ow=34;43:'
+		export LS_COLORS='di=1;36;40:ln=1;35;40:so=1;32;40:pi=1;33;40:ex=31;40:bd=34;46:cd=34;43:su=0;41:sg=0;46:tw=0;42:ow=34;43:'
 		;;
 esac
