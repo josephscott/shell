@@ -23,3 +23,13 @@ shopt -s histappend
 HISTCONTROL=ignoreboth
 HISTSIZE=1000
 HISTFILESIZE=2000
+
+# OS specific
+case "$OSTYPE" in
+	darwin*)
+		;;
+	linux*)
+		ll='ls -laF --color=auto'
+		export LS_COLORS=$LSCOLORS
+		;;
+esac
