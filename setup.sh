@@ -11,9 +11,9 @@ TARGET=${1-$HOME}
 
 OS="unknown"
 case "$OSTYPE" in
-	darwin*)	OS="osx" ;;
-	linux*)		OS="linux" ;;
-	*)		OS="UNKNOWN" ;;
+	darwin*) OS="osx" ;;
+	linux*)  OS="linux" ;;
+	*)       OS="UNKNOWN" ;;
 esac
 
 if [ "$OS" = "UNKNOWN" ]; then
@@ -77,5 +77,17 @@ echo ""
 echo " *** bin ***"
 symlink_files "$FROM"/bin "$TARGET"/bin
 echo ""
+
+if [ "$OS" = "osx" ]; then
+	echo " *** bin: OS X ***"
+#	symlink_files "$FROM"/bin-osx "$TARGET"/bin
+	echo ""
+fi
+
+if [ "$OS" = "linux" ]; then
+	echo " *** bin: linux ***"
+#	symlink_files "$FROM"/bin-linux "$TARGET"/bin
+	echo ""
+fi
 
 echo ""
