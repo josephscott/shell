@@ -45,6 +45,7 @@ autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
 autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 autocmd InsertEnter * match ExtraWhitespace ''  
 
+set background=dark
 " colorscheme: start
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
