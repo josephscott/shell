@@ -37,6 +37,9 @@ autocmd FileType php let php_folding=1
 autocmd FileType php DoMatchParen
 autocmd FileType php hi MatchParen ctermbg=blue guibg=lightblue
 
+" markdown
+au BufRead,BufNewFile *.md set filetype=markdown
+
 " Highlight EOL whitespace, http://vim.wikia.com/wiki/Highlight_unwanted_spaces
 highlight ExtraWhitespace ctermbg=darkred guibg=#382424
 autocmd ColorScheme * highlight ExtraWhitespace ctermbg=red guibg=red
