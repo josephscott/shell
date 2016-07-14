@@ -1,6 +1,6 @@
 
 # path
-PATH="$HOME/bin:$PATH"
+PATH="$HOME/bin:/usr/local/go/bin:$PATH"
 
 # Go Lang
 export GOPATH=$HOME/work
