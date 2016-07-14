@@ -2,6 +2,9 @@
 # path
 PATH="$HOME/bin:$PATH"
 
+# Go Lang
+export GOPATH=$HOME/work
+
 # good enough, because I can never find perfect
 export PS1="\[\e[33m\]\u\[\e[m\]@\[\e[32m\]\H\[\e[m\] \[\e[36m\]\w\[\e[m\]\\$ "
 
