@@ -1,5 +1,5 @@
 #!/bin/bash
-TUNNEL_NAME=proxy
+TUNNEL_NAME=proxy-a8c
 TUNNEL_SSH="ssh -Nf $TUNNEL_NAME"
 
 COMMAND=${1:-status}
