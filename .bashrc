@@ -5,6 +5,10 @@
 # Get Mac OS to leave me alone
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
+# Color is usually fine
+export CLICOLOR=1
+export LSCOLORS=GxFxCxDxbxegedabagaced
+
 PATH="$HOME/bin:$PATH"
 
 alias EDITOR="vim"
