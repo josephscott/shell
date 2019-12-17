@@ -2,3 +2,9 @@ set nocompatible
 
 syntax on
 filetype on
+
+" A place to keep undo's
+set undofile
+set undolevels=1000
+set undoreload=10000
+set undodir=~/.vim/undo
