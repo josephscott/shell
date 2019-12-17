@@ -4,4 +4,6 @@
 
 PATH="$HOME/bin:$PATH"
 
+alias EDITOR="vim"
+
 alias ll="ls -laF"
