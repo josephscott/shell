@@ -15,3 +15,6 @@ set fileformat=unix
 set tabstop=4
 set shiftwidth=4
 set backspace=indent,eol,start
+set noautoindent
+set nosmartindent
+set nocindent
