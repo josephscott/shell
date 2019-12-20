@@ -21,3 +21,9 @@ set nocindent
 
 " display
 set ruler
+set hlsearch
+set showcmd
+set incsearch
+set ignorecase
+set scrolloff=3
+set laststatus=2
