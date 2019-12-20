@@ -18,3 +18,6 @@ set backspace=indent,eol,start
 set noautoindent
 set nosmartindent
 set nocindent
+
+" display
+set ruler
