@@ -12,3 +12,4 @@ set undodir=~/.vim/undo
 " how to treat files
 set encoding=utf-8
 set fileformat=unix
+set tabstop=4
