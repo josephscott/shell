@@ -4,6 +4,12 @@
 # Get Mac OS to leave me alone
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
+# ENV basics
+export LANG="en_US.UTF-8"
+export LC_COLLATE="C"
+export LC_ALL="en_US.UTF-8"
+export EDITOR="vim"
+
 # Color is usually fine
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxbxegedabagaced
@@ -13,8 +19,7 @@ export PS1="\[\e[33m\]\u\[\e[m\]@\[\e[32m\]\H\[\e[m\] \[\e[36m\]\w\[\e[m\]\\$ "
 
 PATH="$HOME/bin:/usr/local/bin:$PATH"
 
-alias EDITOR="vim"
-
+# Easy access, for lazy typing
 alias ll="ls -laF"
 
 # History
