@@ -27,3 +27,6 @@ set incsearch
 set ignorecase
 set scrolloff=3
 set laststatus=2
+
+" php syntax
+autocmd FileType php let php_sql_query=1
