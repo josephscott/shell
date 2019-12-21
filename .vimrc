@@ -30,3 +30,4 @@ set laststatus=2
 
 " php syntax
 autocmd FileType php let php_sql_query=1
+autocmd FileType php let php_htmlInStrings=1
