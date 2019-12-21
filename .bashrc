@@ -13,3 +13,9 @@ PATH="$HOME/bin:/usr/local/bin:$PATH"
 alias EDITOR="vim"
 
 alias ll="ls -laF"
+
+# History
+shopt -s histappend
+HISTCONTROL=ignoreboth
+HISTSIZE=1000
+HISTFILESIZE=10000
