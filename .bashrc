@@ -8,6 +8,9 @@ export BASH_SILENCE_DEPRECATION_WARNING=1
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxbxegedabagaced
 
+# Prompt, good enough, because it never gets to perfect
+export PS1="\[\e[33m\]\u\[\e[m\]@\[\e[32m\]\H\[\e[m\] \[\e[36m\]\w\[\e[m\]\\$ "
+
 PATH="$HOME/bin:/usr/local/bin:$PATH"
 
 alias EDITOR="vim"
