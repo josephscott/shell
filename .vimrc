@@ -31,3 +31,7 @@ set laststatus=2
 " php syntax
 autocmd FileType php let php_sql_query=1
 autocmd FileType php let php_htmlInStrings=1
+autocmd FileType php let php_noShortTags=1
+autocmd FileType php let php_folding=1
+autocmd FileType php DoMatchParen
+autocmd FileType php hi MatchParen ctermbg=blue guibg=lightblue
