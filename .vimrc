@@ -43,6 +43,8 @@ autocmd FileType php hi MatchParen ctermbg=blue guibg=lightblue
 set background=dark
 hi clear
 
+" FROM https://github.com/vim/vim/blob/master/runtime/syntax/syncolor.vim
+
 " Vim syntax support file
 " Maintainer:	Bram Moolenaar <Bram@vim.org>
 " Last Change:	2001 Sep 12
