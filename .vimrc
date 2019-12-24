@@ -43,6 +43,9 @@ autocmd FileType php hi MatchParen ctermbg=blue guibg=lightblue
 set background=dark
 hi clear
 
+" Lighter than my previous default
+colorscheme papercolor
+
 " This is a slightly modified default Vim syntax style.  Firmly in the
 " "Good Enough" category
-colorscheme vim-default
+"colorscheme vim-default
