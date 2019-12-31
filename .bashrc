@@ -26,4 +26,4 @@ alias ll="ls -laF"
 shopt -s histappend
 HISTCONTROL=ignoreboth
 HISTSIZE=1000
-HISTFILESIZE=10000
+HISTFILESIZE=5000000
