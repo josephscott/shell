@@ -2,6 +2,7 @@ set nocompatible
 
 syntax on
 filetype on
+set modelines=3
 
 " A place to keep undo's
 set undofile
