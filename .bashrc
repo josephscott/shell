@@ -13,7 +13,6 @@ export EDITOR="vim"
 # Color is usually fine
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxbxegedabagaced
-export LS_COLORS=GxFxCxDxbxegedabagaced
 
 # Prompt, good enough, because it never gets to perfect
 export PS1="\[\e[33m\]\u\[\e[m\]@\[\e[32m\]\H\[\e[m\] \[\e[36m\]\w\[\e[m\]\\$ "
