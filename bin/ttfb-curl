@@ -17,10 +17,16 @@ p95=$(sed '96q;d' "$tmpfile")
 p99=$(sed '100q;d' "$tmpfile")
 max=$(sed '101q;d' "$tmpfile")
 
-avg=$(awk '{sum+=$1} END {print(sum/NR)}' "$tmpfile")
+avg=$(awk '{ sum += $1 } END { print( sum / NR ) }' "$tmpfile")
 
 # https://stackoverflow.com/a/15101429
-stddev=$(cat "$tmpfile" | awk '{sum+=$1; sumsq+=$1*$1}END{print sqrt(sumsq/NR - (sum/NR)**2)}')
+stddev=$(cat "$tmpfile" | awk '
+{
+	sum += $1;
+	sumsq += $1 * $1
+} END {
+	print sqrt( sumsq / NR - ( sum / NR ) ** 2 )
+}')
 
 echo
 echo "*** Of 101 requests ***"
