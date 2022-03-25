@@ -6,7 +6,7 @@ echo
 for i in {1..100}
 do
 	printf "\rMaking request %d of 100" "$i"
-	curl -w "%{time_total}\n" -s -o /dev/null "$@" >> "$tmpfile"
+	curl -w "%{time_starttransfer}\n" -s -o /dev/null "$@" >> "$tmpfile"
 done
 
 sort -o "$tmpfile" "$tmpfile"
