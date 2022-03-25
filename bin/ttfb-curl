@@ -54,7 +54,7 @@ BEGIN { delta = ( delta == "" ? 0.1 : delta ) }
 END {
 	for ( bucketNr=1; bucketNr <= numBuckets; bucketNr++ ) {
 		end = beg + delta
-		printf "%0.1f %0.1f %d\n", beg, end, cnt[bucketNr]
+		printf "| %0.1f -> %0.1f = %d\n", beg, end, cnt[bucketNr]
 		beg = end
 	}
 }' "$tmpfile"
