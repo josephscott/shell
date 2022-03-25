@@ -32,7 +32,7 @@ stddev=$(awk '
 
 echo
 echo
-echo "*** TTFB of 100 requests ***"
+echo "*** TTFB of 100 requests, in seconds ***"
 echo
 echo "min    = $min"
 echo "avg    = $avg"
