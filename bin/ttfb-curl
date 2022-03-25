@@ -43,8 +43,21 @@ echo "max    = $max"
 echo "stddev = $stddev"
 echo
 
-# https://stackoverflow.com/a/49748976
-awk -v size=0.1 '{ b=int($1/size); a[b]++; bmax=b>bmax?b:bmax; bmin=b<bmin?b:bmin } END { for(i=bmin;i<=bmax;++i) print i*size,(i+1)*size,a[i] }' "$tmpfile"
+# https://stackoverflow.com/a/49738167
+awk -v size=0.1 '
+BEGIN { delta = ( delta == "" ? 0.1 : delta ) }
+{
+	bucketNr = int( ( $0 + delta ) / delta )
+	cnt[bucketNr]++
+	numBuckets = (numBuckets > bucketNr ? numBuckets : bucketNr)
+}
+END {
+	for ( bucketNr=1; bucketNr <= numBuckets; bucketNr++ ) {
+		end = beg + delta
+		printf "%0.1f %0.1f %d\n", beg, end, cnt[bucketNr]
+		beg = end
+	}
+}' "$tmpfile"
 
 echo
 
