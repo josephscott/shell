@@ -2,8 +2,10 @@
 
 tmpfile=$(mktemp /tmp/ttfb-curl.XXXXXX)
 
+echo
 for i in {0..100}
 do
+	printf "\rMaking request %d of 101" "$i"
 	curl -w "%{time_total}\n" -s -o /dev/null "$@" >> "$tmpfile"
 done
 
@@ -29,6 +31,7 @@ stddev=$(awk '
 }' "$tmpfile")
 
 echo
+echo
 echo "*** TTFB of 101 requests ***"
 echo
 echo "min    = $min"
@@ -44,6 +47,7 @@ echo "p99 = $p99"
 echo
 
 echo "*** Buckets ***"
+echo
 # https://stackoverflow.com/a/49738167
 awk -v size=0.1 '
 BEGIN { delta = ( delta == "" ? 0.1 : delta ) }
