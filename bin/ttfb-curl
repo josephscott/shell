@@ -3,21 +3,21 @@
 tmpfile=$(mktemp /tmp/ttfb-curl.XXXXXX)
 
 echo
-for i in {0..100}
+for i in {1..100}
 do
-	printf "\rMaking request %d of 101" "$i"
+	printf "\rMaking request %d of 100" "$i"
 	curl -w "%{time_total}\n" -s -o /dev/null "$@" >> "$tmpfile"
 done
 
 sort -o "$tmpfile" "$tmpfile"
 
 min=$(sed '1q;d' "$tmpfile")
-p50=$(sed '51q;d' "$tmpfile")
-p75=$(sed '76q;d' "$tmpfile")
-p90=$(sed '91q;d' "$tmpfile")
-p95=$(sed '96q;d' "$tmpfile")
-p99=$(sed '100q;d' "$tmpfile")
-max=$(sed '101q;d' "$tmpfile")
+p50=$(sed '50q;d' "$tmpfile")
+p75=$(sed '75q;d' "$tmpfile")
+p90=$(sed '90q;d' "$tmpfile")
+p95=$(sed '95q;d' "$tmpfile")
+p99=$(sed '99q;d' "$tmpfile")
+max=$(sed '100q;d' "$tmpfile")
 
 avg=$(awk '{ sum += $1 } END { print( sum / NR ) }' "$tmpfile")
 
@@ -32,7 +32,7 @@ stddev=$(awk '
 
 echo
 echo
-echo "*** TTFB of 101 requests ***"
+echo "*** TTFB of 100 requests ***"
 echo
 echo "min    = $min"
 echo "avg    = $avg"
