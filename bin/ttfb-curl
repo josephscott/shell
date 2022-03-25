@@ -29,7 +29,12 @@ stddev=$(awk '
 }' "$tmpfile")
 
 echo
-echo "*** Of 101 requests ***"
+echo "*** TTFB of 101 requests ***"
+echo
+echo "min    = $min"
+echo "avg    = $avg"
+echo "max    = $max"
+echo "stddev = $stddev"
 echo
 echo "p50 = $p50"
 echo "p75 = $p75"
@@ -37,12 +42,8 @@ echo "p90 = $p90"
 echo "p95 = $p95"
 echo "p99 = $p99"
 echo
-echo "min    = $min"
-echo "avg    = $avg"
-echo "max    = $max"
-echo "stddev = $stddev"
-echo
 
+echo "*** Buckets ***"
 # https://stackoverflow.com/a/49738167
 awk -v size=0.1 '
 BEGIN { delta = ( delta == "" ? 0.1 : delta ) }
