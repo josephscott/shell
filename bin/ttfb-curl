@@ -1,0 +1,69 @@
+#!/bin/bash
+
+tmpfile=$(mktemp /tmp/ttfb-curl.XXXXXX)
+
+echo
+for i in {1..100}
+do
+	printf "\rMaking request %d of 100" "$i"
+	curl -w "%{time_starttransfer}\n" -s -o /dev/null "$@" >> "$tmpfile"
+done
+
+sort -o "$tmpfile" "$tmpfile"
+
+min=$(sed '1q;d' "$tmpfile")
+p50=$(sed '50q;d' "$tmpfile")
+p75=$(sed '75q;d' "$tmpfile")
+p90=$(sed '90q;d' "$tmpfile")
+p95=$(sed '95q;d' "$tmpfile")
+p99=$(sed '99q;d' "$tmpfile")
+max=$(sed '100q;d' "$tmpfile")
+
+avg=$(awk '{ sum += $1 } END { print( sum / NR ) }' "$tmpfile")
+
+# https://stackoverflow.com/a/15101429
+stddev=$(awk '
+{
+	sum += $1;
+	sumsq += $1 * $1
+} END {
+	print sqrt( sumsq / NR - ( sum / NR ) ** 2 )
+}' "$tmpfile")
+
+echo
+echo
+echo "*** TTFB of 100 requests, in seconds ***"
+echo
+echo "min    = $min"
+echo "avg    = $avg"
+echo "max    = $max"
+echo "stddev = $stddev"
+echo
+echo "p50 = $p50"
+echo "p75 = $p75"
+echo "p90 = $p90"
+echo "p95 = $p95"
+echo "p99 = $p99"
+echo
+
+echo "*** Buckets ***"
+echo
+# https://stackoverflow.com/a/49738167
+awk -v size=0.1 '
+BEGIN { delta = ( delta == "" ? 0.1 : delta ) }
+{
+	bucketNr = int( ( $0 + delta ) / delta )
+	cnt[bucketNr]++
+	numBuckets = (numBuckets > bucketNr ? numBuckets : bucketNr)
+}
+END {
+	for ( bucketNr=1; bucketNr <= numBuckets; bucketNr++ ) {
+		end = beg + delta
+		printf "| %0.1f -> %0.1f = %d\n", beg, end, cnt[bucketNr]
+		beg = end
+	}
+}' "$tmpfile"
+
+echo
+
+rm "$tmpfile"
