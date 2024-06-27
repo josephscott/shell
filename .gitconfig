@@ -17,11 +17,17 @@
 
 [pull]
 	rebase = false
+	autoSetupRemote = true
 
 [push]
 	default = simple
+	autoSetupRemote = true
 
 [github]
 	user = josephscott
+
+[credential]
+	helper = cache
+
 [init]
 	defaultBranch = trunk
