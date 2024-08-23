@@ -1,4 +1,14 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+trap cleanup SIGINT SIGTERM ERR EXIT
+
+tmpfile=$(mktemp /tmp/ttfb-curl.XXXXXX)
+
+cleanup() {
+	trap - SIGINT SIGTERM ERR EXIT
+	rm "$tmpfile"
+}
 
 # Default number of requests
 num_requests=100
@@ -8,8 +18,6 @@ if [ ! -z "$1" ] && [[ $1 =~ ^[0-9]+$ ]]; then
   num_requests=$1
   shift # Shift the arguments so that $@ contains the URL and other curl options
 fi
-
-tmpfile=$(mktemp /tmp/ttfb-curl.XXXXXX)
 
 echo
 for i in $(seq 1 $num_requests)
@@ -73,5 +81,4 @@ END {
 
 echo
 
-rm "$tmpfile"
-
+cleanup
