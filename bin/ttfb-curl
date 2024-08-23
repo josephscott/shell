@@ -1,27 +1,35 @@
 #!/bin/bash
 
+# Default number of requests
+num_requests=100
+
+# Check if a number of requests is provided as an argument
+if [ ! -z "$1" ] && [[ $1 =~ ^[0-9]+$ ]]; then
+  num_requests=$1
+  shift # Shift the arguments so that $@ contains the URL and other curl options
+fi
+
 tmpfile=$(mktemp /tmp/ttfb-curl.XXXXXX)
 
 echo
-for i in {1..100}
+for i in $(seq 1 $num_requests)
 do
-	printf "\rMaking request %d of 100" "$i"
+	printf "\rMaking request %d of %d" "$i" "$num_requests"
 	curl -w "%{time_starttransfer}\n" -s -o /dev/null "$@" >> "$tmpfile"
 done
 
 sort -o "$tmpfile" "$tmpfile"
 
 min=$(sed '1q;d' "$tmpfile")
-p50=$(sed '50q;d' "$tmpfile")
-p75=$(sed '75q;d' "$tmpfile")
-p90=$(sed '90q;d' "$tmpfile")
-p95=$(sed '95q;d' "$tmpfile")
-p99=$(sed '99q;d' "$tmpfile")
-max=$(sed '100q;d' "$tmpfile")
+p50=$(sed "$((num_requests / 2))q;d" "$tmpfile")
+p75=$(sed "$((num_requests * 75 / 100))q;d" "$tmpfile")
+p90=$(sed "$((num_requests * 90 / 100))q;d" "$tmpfile")
+p95=$(sed "$((num_requests * 95 / 100))q;d" "$tmpfile")
+p99=$(sed "$((num_requests * 99 / 100))q;d" "$tmpfile")
+max=$(sed "${num_requests}q;d" "$tmpfile")
 
 avg=$(awk '{ sum += $1 } END { print( sum / NR ) }' "$tmpfile")
 
-# https://stackoverflow.com/a/15101429
 stddev=$(awk '
 {
 	sum += $1;
@@ -32,7 +40,7 @@ stddev=$(awk '
 
 echo
 echo
-echo "*** TTFB of 100 requests, in seconds ***"
+echo "*** TTFB of $num_requests requests, in seconds ***"
 echo
 echo "min    = $min"
 echo "avg    = $avg"
@@ -48,7 +56,6 @@ echo
 
 echo "*** Buckets ***"
 echo
-# https://stackoverflow.com/a/49738167
 awk -v size=0.1 '
 BEGIN { delta = ( delta == "" ? 0.1 : delta ) }
 {
@@ -67,3 +74,4 @@ END {
 echo
 
 rm "$tmpfile"
+
