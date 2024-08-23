@@ -14,13 +14,13 @@ cleanup() {
 num_requests=100
 
 # Check if a number of requests is provided as an argument
-if [ ! -z "$1" ] && [[ $1 =~ ^[0-9]+$ ]]; then
+if [ -n "$1" ] && [[ $1 =~ ^[0-9]+$ ]]; then
   num_requests=$1
   shift # Shift the arguments so that $@ contains the URL and other curl options
 fi
 
 echo
-for i in $(seq 1 $num_requests)
+for i in $(seq 1 "$num_requests")
 do
 	printf "\rMaking request %d of %d" "$i" "$num_requests"
 	curl -w "%{time_starttransfer}\n" -s -o /dev/null "$@" >> "$tmpfile"
