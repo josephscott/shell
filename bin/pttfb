@@ -1,0 +1,211 @@
+#!/usr/bin/env php
+<?php
+# :set style=php
+declare( strict_types = 1 );
+
+class PTTFB {
+	private string $short_opts = 'u:n:f:';
+
+	private int $num_requests = 100;
+	private int $curl_timeout = 60;
+	private int $bucket_by = 100;
+	private string $format = 'none';
+	private string $url = '';
+
+	private array $data = [];
+
+// --- //
+
+	public function __construct() {
+		$this->data['url'] = '';
+		$this->data['metrics'] = [];
+		$this->data['requests'] = [];
+		$this->data['buckets'] = [];
+	}
+
+	public function run() : void {
+		if ( ! function_exists( 'curl_init' ) ) {
+			echo "\n";
+			echo "The curl extension is required, but not found.\n";
+			echo "\n";
+		}
+
+		if ( ! $this->check_options() ) {
+			$this->usage();
+			exit;
+		}
+
+		$this->data['url'] = $this->url;
+
+		$this->msg( "\n" );
+
+		for ( $i = 0; $i < $this->num_requests; $i++ ) {
+			$count = $i + 1;
+
+			$this->msg( "\rMaking request $count of {$this->num_requests}" );
+			$this->do_request( $i );
+		}
+
+		$this->msg( "\n\n" );
+		$this->msg( "*** TTFB of {$this->num_requests} requests, in milliseconds ***\n" );
+		$this->msg( "\n" );
+
+		$this->calculate_metrics();
+
+		if ( $this->format === 'json' ) {
+			$this->show_json();
+		} else {
+			$this->show_metrics();
+		}
+
+		$this->msg( "\n" );
+	}
+
+// --- //
+
+	private function calculate_metrics() : void {
+		sort( $this->data['requests'] );
+
+		$this->data['metrics']['min'] = $this->data['requests'][0];
+		$this->data['metrics']['max'] = $this->data['requests'][ array_key_last( $this->data['requests'] ) ];
+
+		$req_sum = array_sum( $this->data['requests'] );
+		$req_count = count( $this->data['requests'] );
+		$req_avg = $req_sum / $req_count;
+		$this->data['metrics']['avg'] = (float) number_format( $req_avg, 3 );
+
+		$this->data['metrics']['stddev'] = $this->standard_deviation();
+
+		$this->data['metrics']['p50'] = $this->percentile( 0.50 );
+		$this->data['metrics']['p75'] = $this->percentile( 0.75 );
+		$this->data['metrics']['p90'] = $this->percentile( 0.90 );
+		$this->data['metrics']['p95'] = $this->percentile( 0.95 );
+		$this->data['metrics']['p99'] = $this->percentile( 0.99 );
+
+		// Buckets
+		$max_bucket = $this->data['metrics']['max'] + $this->bucket_by;
+		$num_buckets = intval( $max_bucket / $this->bucket_by );
+		for ( $i = 1; $i <= $num_buckets; $i++ ) {
+			$this->data['buckets'][ $i * $this->bucket_by ] = 0;
+		}
+
+		$cur_bucket = $this->bucket_by;
+		foreach ( $this->data['requests'] as $r ) {
+			while ( $r > $cur_bucket ) {
+				$cur_bucket += $this->bucket_by;
+			}
+
+			$this->data['buckets'][$cur_bucket]++;
+		}
+	}
+
+	private function check_options() : bool {
+		$options = getopt( $this->short_opts );
+		if ( ! isset( $options['u'] ) ) {
+			return false;
+		}
+
+		$this->url = $options['u'];
+
+		if ( isset( $options['n'] ) ) {
+			$this->num_requests = (int) $options['n'];
+		}
+
+		if ( isset( $options['f'] ) ) {
+			if ( $options['f'] === 'json' ) {
+				$this->format = 'json';
+			}
+		}
+
+		return true;
+	}
+
+	private function do_request( int $i ) : void {
+		$curl = curl_init( $this->url );
+		if ( $curl === false ) {
+			echo "\n";
+			echo "Call to curl_init() failed.\n";
+			echo "\n";
+		}
+
+		curl_setopt_array( $curl, [
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_FOLLOWLOCATION => false,
+			CURLOPT_TIMEOUT => $this->curl_timeout,
+			CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+			CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
+			CURLOPT_SSL_VERIFYHOST => false,
+			CURLOPT_SSL_VERIFYPEER => false,
+		] );
+
+		$response = curl_exec( $curl );
+		$info = curl_getinfo( $curl );
+
+		$this->data['requests'][$i] = $info['starttransfer_time'] * 1000;
+	}
+
+	private function msg ( string $msg ) : void {
+		if ( $this->format === 'none' ) {
+			echo $msg;
+		}
+	}
+
+	private function percentile( float $p ) : float {
+		$req_count = count( $this->data['requests'] );
+		$index = (int) ( $req_count * $p );
+		$percentile = $this->data['requests'][$index];
+		return $percentile;
+	}
+
+	private function show_metrics() : void {
+		echo "min    = {$this->data['metrics']['min']}\n";
+		echo "avg    = {$this->data['metrics']['avg']}\n";
+		echo "max    = {$this->data['metrics']['max']}\n";
+		echo "stddev = {$this->data['metrics']['stddev']}\n";
+
+		echo "\n";
+
+		echo "p50 = {$this->data['metrics']['p50']}\n";
+		echo "p75 = {$this->data['metrics']['p75']}\n";
+		echo "p90 = {$this->data['metrics']['p90']}\n";
+		echo "p95 = {$this->data['metrics']['p95']}\n";
+		echo "p99 = {$this->data['metrics']['p99']}\n";
+
+		echo "\n";
+		echo "*** Buckets ***\n";
+		echo "\n";
+
+		foreach ( $this->data['buckets'] as $bucket => $num_req ) {
+			$lower = $bucket - $this->bucket_by;
+			echo "$lower -> $bucket = $num_req\n";
+		}
+	}
+
+	private function show_json() : void {
+		$out = json_encode( $this->data, JSON_PRETTY_PRINT );
+		echo $out;
+	}
+
+	private function standard_deviation() : float {
+		$el_count = count( $this->data['requests'] );
+		$variance = 0.0;
+        
+		foreach( $this->data['requests'] as $i ) {
+			$variance += pow( ( $i - $this->data['metrics']['avg'] ), 2 );
+		}
+
+		$stddev = (float) sqrt( $variance / $el_count );
+		$stddev = (float) number_format( $stddev, 3 );
+		return $stddev;
+	}
+
+	private function usage() : void {
+		echo "\n";
+		echo "Usage:\n\n";
+		echo "pttfb -n <NUMBER OF REQUESTS, optional, 100> -u <URL, required>\n";
+		echo "\n";
+	}
+}
+
+$main = new PTTFB();
+$main->run();
