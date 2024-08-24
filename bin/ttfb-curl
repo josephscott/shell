@@ -1,27 +1,48 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+trap cleanup SIGINT SIGTERM ERR EXIT
 
 tmpfile=$(mktemp /tmp/ttfb-curl.XXXXXX)
 
+cleanup() {
+	trap - SIGINT SIGTERM ERR EXIT
+	rm "$tmpfile"
+}
+
+# Default number of requests
+num_requests=100
+
+# Check if a number of requests is provided as an argument
+if [ -n "$1" ] && [[ $1 =~ ^[0-9]+$ ]]; then
+  num_requests=$1
+  shift # Shift the arguments so that $@ contains the URL and other curl options
+fi
+
 echo
-for i in {1..100}
+for i in $(seq 1 "$num_requests")
 do
-	printf "\rMaking request %d of 100" "$i"
-	curl -w "%{time_starttransfer}\n" -s -o /dev/null "$@" >> "$tmpfile"
+	printf "\rMaking request %d of %d" "$i" "$num_requests"
+
+	# Generate a random string
+	random_string=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 8)
+
+	# Append the random string to the URL
+	curl -w "%{time_starttransfer}\n" -s -o /dev/null "$@?rand=$random_string" >> "$tmpfile"
 done
 
 sort -o "$tmpfile" "$tmpfile"
 
 min=$(sed '1q;d' "$tmpfile")
-p50=$(sed '50q;d' "$tmpfile")
-p75=$(sed '75q;d' "$tmpfile")
-p90=$(sed '90q;d' "$tmpfile")
-p95=$(sed '95q;d' "$tmpfile")
-p99=$(sed '99q;d' "$tmpfile")
-max=$(sed '100q;d' "$tmpfile")
+p50=$(sed "$((num_requests / 2))q;d" "$tmpfile")
+p75=$(sed "$((num_requests * 75 / 100))q;d" "$tmpfile")
+p90=$(sed "$((num_requests * 90 / 100))q;d" "$tmpfile")
+p95=$(sed "$((num_requests * 95 / 100))q;d" "$tmpfile")
+p99=$(sed "$((num_requests * 99 / 100))q;d" "$tmpfile")
+max=$(sed "${num_requests}q;d" "$tmpfile")
 
 avg=$(awk '{ sum += $1 } END { print( sum / NR ) }' "$tmpfile")
 
-# https://stackoverflow.com/a/15101429
 stddev=$(awk '
 {
 	sum += $1;
@@ -32,7 +53,7 @@ stddev=$(awk '
 
 echo
 echo
-echo "*** TTFB of 100 requests, in seconds ***"
+echo "*** TTFB of $num_requests requests, in seconds ***"
 echo
 echo "min    = $min"
 echo "avg    = $avg"
@@ -48,7 +69,6 @@ echo
 
 echo "*** Buckets ***"
 echo
-# https://stackoverflow.com/a/49738167
 awk -v size=0.1 '
 BEGIN { delta = ( delta == "" ? 0.1 : delta ) }
 {
@@ -66,4 +86,4 @@ END {
 
 echo
 
-rm "$tmpfile"
+cleanup
