@@ -143,6 +143,14 @@ class PTTFB {
 		$response = curl_exec( $curl );
 		$info = curl_getinfo( $curl );
 
+		$http_code = (int) $info['http_code'];
+		if ( $http_code !== 200 ) {
+			$error = "Response code was not 200, aborting";
+			echo "\n$error\n";
+			error_log( "pttfb: $error" );
+			exit;
+		}
+
 		$this->data['requests'][$i] = $info['starttransfer_time'] * 1000;
 	}
 
