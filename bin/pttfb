@@ -121,7 +121,9 @@ class PTTFB {
 	}
 
 	private function do_request( int $i ) : void {
-		$curl = curl_init( $this->url );
+		$cachebust = '?cachebust=' . bin2hex( random_bytes( 13 ) );
+
+		$curl = curl_init( $this->url . $cachebust );
 		if ( $curl === false ) {
 			echo "\n";
 			echo "Call to curl_init() failed.\n";
