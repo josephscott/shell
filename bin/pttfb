@@ -202,7 +202,11 @@ class PTTFB {
 	private function usage() : void {
 		echo "\n";
 		echo "Usage:\n\n";
-		echo "pttfb -n <NUMBER OF REQUESTS, optional, 100> -u <URL, required>\n";
+		echo "pttfb -f <FORMAT> -n <NUMBER OF REQUESTS> -u <URL>\n";
+		echo "\n";
+		echo " -f <json|none>   What format to use for the output, default: none\n";
+		echo " -n               How many requests to make, default: 100\n";
+		echo " -u <URL>         What URL to request, required\n";
 		echo "\n";
 	}
 }
