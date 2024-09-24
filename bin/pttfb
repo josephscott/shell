@@ -4,12 +4,13 @@
 declare( strict_types = 1 );
 
 class PTTFB {
-	private string $short_opts = 'u:n:f:';
+	private string $short_opts = 'u:n:f:r:r:';
 
 	private int $num_requests = 100;
 	private int $curl_timeout = 60;
 	private int $bucket_by = 100;
 	private string $format = 'none';
+	private string $resolve = '';
 	private string $url = '';
 
 	private array $data = [];
@@ -111,6 +112,10 @@ class PTTFB {
 			$this->num_requests = (int) $options['n'];
 		}
 
+		if ( isset( $options['r'] ) ) {
+			$this->resolve = $options['r'];
+		}
+
 		if ( isset( $options['f'] ) ) {
 			if ( $options['f'] === 'json' ) {
 				$this->format = 'json';
@@ -139,6 +144,10 @@ class PTTFB {
 			CURLOPT_SSL_VERIFYHOST => false,
 			CURLOPT_SSL_VERIFYPEER => false,
 		] );
+
+		if ( !empty( $this->resolve ) ) {
+			curl_setopt( $curl, CURLOPT_RESOLVE, [ $this->resolve ] );
+		}
 
 		$response = curl_exec( $curl );
 		$info = curl_getinfo( $curl );
@@ -216,6 +225,7 @@ class PTTFB {
 		echo "\n";
 		echo " -f <json|none>   What format to use for the output, default: none\n";
 		echo " -n               How many requests to make, default: 100\n";
+		echo " -r               Provide a custom address for a specific host and port pair ( 'example.com:443:127.0.0.1' )\n";
 		echo " -u <URL>         What URL to request, required\n";
 		echo "\n";
 	}
