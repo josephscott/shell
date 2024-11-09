@@ -17,7 +17,13 @@ export LSCOLORS=GxFxCxDxbxegedabagaced
 # Prompt, good enough, because it never gets to perfect
 export PS1="\[\e[33m\]\u\[\e[m\]@\[\e[32m\]\H\[\e[m\] \[\e[36m\]\w\[\e[m\]\\$ "
 
-PATH="$HOME/bin:/usr/local/bin:/Applications/MAMP/bin/php/php8.2.0/bin:/Applications/XAMPP/bin:/opt/homebrew/bin:$PATH"
+
+PATH="$HOME/bin:/usr/local/bin:/opt/homebrew/bin:$PATH"
+
+
+export N_PREFIX=$HOME/.n
+export PATH=$N_PREFIX/bin:$PATH
+
 
 # Easy access, for lazy typing
 alias ll="ls -laF --color"
