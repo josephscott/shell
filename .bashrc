@@ -33,3 +33,9 @@ shopt -s histappend
 HISTCONTROL=ignoreboth
 HISTSIZE=1000
 HISTFILESIZE=5000000
+
+
+
+
+alias tailscale=/Applications/Tailscale.app/Contents/MacOS/Tailscale
+alias aider=$HOME/Library/Python/3.9/bin/aider
