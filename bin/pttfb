@@ -152,6 +152,13 @@ class PTTFB {
 		$response = curl_exec( $curl );
 		$info = curl_getinfo( $curl );
 
+		$error_no = curl_errno( $curl );
+		if ( $error_no !== 0 ) {
+			print_r( curl_error( $curl ) );
+			print_r( $info );
+			exit;
+		}
+
 		$http_code = (int) $info['http_code'];
 		if ( $http_code !== 200 ) {
 			$error = "Response code was not 200, aborting";
