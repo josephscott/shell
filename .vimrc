@@ -53,4 +53,5 @@ colorscheme papercolor
 " Make the background color consistent
 "highlight Normal ctermbg=NONE
 "highlight nonText ctermbg=NONE
+hi EndOfBuffer ctermfg=lightgray
 hi Normal ctermbg=None
