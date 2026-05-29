@@ -52,3 +52,5 @@ jdeploy() {
 }
 
 export CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING=1
+
+export NODE_OPTIONS="--max-old-space-size=8192"
