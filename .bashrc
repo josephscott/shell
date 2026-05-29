@@ -35,7 +35,20 @@ HISTSIZE=1000
 HISTFILESIZE=5000000
 
 
+flush_memcached() {
+  printf "flush_all\r\nquit\r\n" | nc 127.0.0.1 11211
+}
 
 
 alias tailscale=/Applications/Tailscale.app/Contents/MacOS/Tailscale
-alias aider=$HOME/Library/Python/3.9/bin/aider
+
+
+
+export PATH="$HOME/.local/bin:$PATH"
+
+jdeploy() {
+    deploy "$@"
+    date
+}
+
+export CLAUDE_CODE_DISABLE_ADAPTIVE_THINKING=1
