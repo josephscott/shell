@@ -1,0 +1,46 @@
+#!/bin/bash
+ 
+# Make cleaning up a branch easier after merging
+ 
+branch=$(git symbolic-ref --short HEAD)
+#COLOR='33[1;35m'
+COLOR=''
+#NC='33[0m'
+NC=''
+ 
+git branch
+ 
+if [ 'list' = "$1" ]; then
+	# branches already listed above by the `git branch` call; nothing more to do
+	:
+elif [ 'all' = "$1" ]; then
+	echo
+	echo -e "Delete ${COLOR}all${NC} branches except trunk? (y/n)"
+	read yes
+
+	if [ 'y' = "$yes" ] || [ 'Y' = "$yes" ]; then
+		echo
+		git checkout trunk
+		echo
+		for b in $(git for-each-ref --format='%(refname:short)' refs/heads/); do
+			if [ 'trunk' != "$b" ]; then
+				git branch -D "$b"
+			fi
+		done
+		echo
+		git branch
+	fi
+elif [ 'trunk' != "$branch" ]; then
+	echo
+	echo -e "Delete branch ${COLOR}$branch${NC}? (y/n)"
+	read yes
+
+	if [ 'y' = "$yes" ] || [ 'Y' = "$yes" ]; then
+		echo
+		git checkout trunk
+		echo
+		git branch -D "$branch"
+		echo
+		git branch
+	fi
+fi
